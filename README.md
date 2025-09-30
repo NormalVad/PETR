@@ -54,7 +54,7 @@ The adaptive multi-frame extensions demonstrate significant improvements over th
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/NormalVad/PETR.git
+git clone https://github.com/yourusername/PETR.git
 cd PETR
 ```
 
@@ -115,7 +115,7 @@ python tools/misc/visualize_3frame_results.py \
 ## 📁 Project Structure
 
 ```
-PETRv2-MultiFrame-Adaptive-Extensions/
+PETR/
 ├── projects/
 │   ├── configs/
 │   │   ├── petrv2/
@@ -202,7 +202,7 @@ If you use this work in your research, please cite:
 
 For questions and discussions:
 - **Email**: ayushgoy@usc.edu
-- **Issues**: [GitHub Issues](https://github.com/NormalVad/PETR/issues)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/PETR/issues)
 
 ---
 
