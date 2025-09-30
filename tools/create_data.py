@@ -63,8 +63,8 @@ def nuscenes_data_prep(root_path,
         out_dir (str): Output directory of the groundtruth database info.
         max_sweeps (int): Number of input consecutive frames. Default: 10
     """
-    nuscenes_converter.create_nuscenes_infos(
-        root_path, info_prefix, version=version, max_sweeps=max_sweeps)
+    # nuscenes_converter.create_nuscenes_infos(
+    #     root_path, info_prefix, version=version, max_sweeps=max_sweeps)
 
     # if version == 'v1.0-test':
     #     info_test_path = osp.join(root_path, f'{info_prefix}_infos_test.pkl')
@@ -80,6 +80,22 @@ def nuscenes_data_prep(root_path,
     #     root_path, info_val_path, version=version)
     # create_groundtruth_database(dataset_name, root_path, info_prefix,
     #                             f'{out_dir}/{info_prefix}_infos_train.pkl')
+
+    ## changed
+    nuscenes_converter.create_nuscenes_infos(
+        root_path, info_prefix, version=version, max_sweeps=max_sweeps, out_dir=out_dir
+    )
+
+    if version == 'v1.0-test':
+        info_test_path = osp.join(out_dir, f'{info_prefix}_infos_test.pkl')
+        nuscenes_converter.export_2d_annotation(root_path, info_test_path, version=version)
+        return
+
+    info_train_path = osp.join(out_dir, f'{info_prefix}_infos_train.pkl')
+    info_val_path = osp.join(out_dir, f'{info_prefix}_infos_val.pkl')
+    nuscenes_converter.export_2d_annotation(root_path, info_train_path, version=version)
+    nuscenes_converter.export_2d_annotation(root_path, info_val_path, version=version)
+    create_groundtruth_database(dataset_name, root_path, info_prefix, info_train_path)
 
 
 def lyft_data_prep(root_path, info_prefix, version, max_sweeps=10):
@@ -211,6 +227,11 @@ parser.add_argument(
 parser.add_argument('--extra-tag', type=str, default='kitti')
 parser.add_argument(
     '--workers', type=int, default=4, help='number of threads to be used')
+parser.add_argument(
+    '--only-gt-database',
+    action='store_true',
+    help='Skip info generation and only create GT database'
+)
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -221,22 +242,55 @@ if __name__ == '__main__':
             version=args.version,
             out_dir=args.out_dir)
     elif args.dataset == 'nuscenes' and args.version != 'v1.0-mini':
-    #    train_version = f'{args.version}-trainval'
-    #    nuscenes_data_prep(
-    #        root_path=args.root_path,
-    #        info_prefix=args.extra_tag,
-    #        version=train_version,
-    #        dataset_name='NuScenesDataset',
-    #        out_dir=args.out_dir,
-    #        max_sweeps=args.max_sweeps)
-        test_version = f'{args.version}-test'
-        nuscenes_data_prep(
+        # train_version = f'{args.version}-trainval'
+        # nuscenes_data_prep(
+        #    root_path=args.root_path,
+        #    info_prefix=args.extra_tag,
+        #    version=train_version,
+        #    dataset_name='NuScenesDataset',
+        #    out_dir=args.out_dir,
+        #    max_sweeps=args.max_sweeps)
+        # test_version = f'{args.version}-test'
+        # nuscenes_data_prep(
+        #     root_path=args.root_path,
+        #     info_prefix=args.extra_tag,
+        #     version=test_version,
+        #     dataset_name='NuScenesDataset',
+        #     out_dir=args.out_dir,
+        #     max_sweeps=args.max_sweeps)
+
+        if args.only_gt_database:
+            print("Skipping info generation, creating GT database only")
+            create_groundtruth_database(
+            dataset_class_name='NuScenesDataset',
+            data_path=args.root_path,
+            info_prefix=args.extra_tag,
+            info_path=osp.join(args.out_dir, f'{args.extra_tag}_infos_train.pkl'),
+            database_save_path=args.out_dir,
+            db_info_save_path=osp.join(args.out_dir, f'{args.extra_tag}_dbinfos_train.pkl'),
+            workers=args.workers 
+        )
+        else:
+            train_version = args.version  # Use the version passed directly (e.g., 'v1.0-trainval')
+            print(f"Processing NuScenes trainval version: {train_version}")
+            nuscenes_data_prep(
             root_path=args.root_path,
             info_prefix=args.extra_tag,
-            version=test_version,
+            version=train_version,      # Use the corrected train_version
             dataset_name='NuScenesDataset',
             out_dir=args.out_dir,
             max_sweeps=args.max_sweeps)
+
+            # --- Process Test ---
+            test_version = 'v1.0-test'   # Use the correct, standard test version string
+            print(f"Processing NuScenes test version: {test_version}")
+            nuscenes_data_prep(
+                root_path=args.root_path,
+                info_prefix=args.extra_tag,
+                version=test_version,      # Use the corrected test_version
+                dataset_name='NuScenesDataset',
+                out_dir=args.out_dir,
+                max_sweeps=args.max_sweeps)
     elif args.dataset == 'nuscenes' and args.version == 'v1.0-mini':
         train_version = f'{args.version}'
         nuscenes_data_prep(
