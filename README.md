@@ -193,7 +193,7 @@ If you use this work in your research, please cite:
 ## 📞 Contact
 
 For questions and discussions:
-- **Email**: your.email@university.edu
+- **Email**: ayushgoy@usc.edu
 - **Issues**: [GitHub Issues](https://github.com/yourusername/PETRv2-Adaptive-Extensions/issues)
 
 ---
