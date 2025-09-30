@@ -73,6 +73,8 @@ cd ..
 4. **Prepare dataset**:
 Follow the [mmdetection3d data preparation guide](https://github.com/open-mmlab/mmdetection3d/blob/master/docs/en/data_preparation.md) for nuScenes dataset.
 
+**Note**: The configuration files in `projects/configs/` are placeholders. The actual adaptive multi-frame implementations are integrated into the mmdetection3d framework through the custom plugins in `projects/mmdet3d_plugin/`.
+
 ## 🚀 Quick Start
 
 ### Training Multi-Frame Adaptive Models
@@ -113,11 +115,14 @@ python tools/misc/visualize_3frame_results.py \
 ## 📁 Project Structure
 
 ```
-PETRv2-Adaptive-Extensions/
+PETRv2-MultiFrame-Adaptive-Extensions/
 ├── projects/
 │   ├── configs/
 │   │   ├── petrv2/
-│   │   │   └── petrv2_3frame_adaptive.py    # 3-frame adaptive config
+│   │   │   ├── petrv2_3frame_adaptive.py    # 3-frame adaptive config
+│   │   │   ├── petrv2_vovnet_gridmask_p4_800x320.py
+│   │   │   └── petrv2_BEVseg.py
+│   │   ├── petr/                             # Original PETR configs
 │   │   └── denoise/                         # Additional configurations
 │   └── mmdet3d_plugin/                      # Custom model implementations
 ├── tools/
@@ -129,6 +134,9 @@ PETRv2-Adaptive-Extensions/
 ├── slurm_train_4frame.sh                   # 4-frame training script
 ├── visualize_petr_4frame.py                 # 4-frame visualization script
 ├── results.py                              # Results analysis and plotting
+├── adaptive_weights_table.png              # Adaptive weights comparison
+├── loss_comparison.png                     # Training loss comparison
+├── metrics_comparison.png                   # Performance metrics comparison
 └── README.md                               # This file
 ```
 
