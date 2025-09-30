@@ -54,8 +54,8 @@ The adaptive multi-frame extensions demonstrate significant improvements over th
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/yourusername/PETRv2-Adaptive-Extensions.git
-cd PETRv2-Adaptive-Extensions
+git clone https://github.com/NormalVad/PETR.git
+cd PETR
 ```
 
 2. **Install dependencies**:
@@ -194,7 +194,7 @@ If you use this work in your research, please cite:
 
 For questions and discussions:
 - **Email**: ayushgoy@usc.edu
-- **Issues**: [GitHub Issues](https://github.com/yourusername/PETRv2-Adaptive-Extensions/issues)
+- **Issues**: [GitHub Issues](https://github.com/NormalVad/PETR/issues)
 
 ---
 
